@@ -29,7 +29,7 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
-          - macos-10.15
+          - macos-12.3
           - windows-2019
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
@@ -98,9 +98,7 @@ jobs:
           vcpkg: true
           ccache: true
           clangtidy: true
-
           cppcheck: true
-
           gcovr: true
           opencppcoverage: true
 
@@ -138,7 +136,7 @@ jobs:
           OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- powershell -C '
             cd ./build/my_exe/test; ctest -C ${{matrix.build_type}} --output-on-failure; cd ../../../
             cd ./build/my_header_lib/test; ctest -C ${{matrix.build_type}} --output-on-failure; cd ../../../
-            cd ./build/my_lib/test; ctest -C ${{matrix.build_type}} --output-on-failure; cd ../../../      
+            cd ./build/my_lib/test; ctest -C ${{matrix.build_type}} --output-on-failure; cd ../../../
           '
 
       - name: Perform CodeQL Analysis
