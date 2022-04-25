@@ -31,7 +31,7 @@ stages:
 test_linux_llvm:
   stage: test
   variables:
-    compiler: llvm
+    compiler: llvm-13.0.0
   script:
     - *setup_linux
     - *setup_cpp
@@ -40,7 +40,7 @@ test_linux_llvm:
 test_linux_gcc:
   stage: test
   variables:
-    compiler: gcc
+    compiler: gcc-10
   script:
     - *setup_linux
     - *setup_cpp

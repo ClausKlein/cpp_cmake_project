@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.16...3.23)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
-# set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
 
 # Add project_options v0.21.0
 # https://github.com/aminya/project_options
@@ -20,10 +20,10 @@ run_vcpkg()
 
 # Set the project name and language
 project(
-  cpp_vcpkg_project
+  cpp_cmake_project
   VERSION 0.0.1
-  DESCRIPTION ""
-  HOMEPAGE_URL "https://github.com/cpp-best-practices/cpp_vcpkg_project"
+  DESCRIPTION "example only"
+  HOMEPAGE_URL "https://github.com/ClausKlein/cpp_cmake_project"
   LANGUAGES CXX C)
 
 # enable sanitizers and clang-tidy if running the tests
