@@ -19,5 +19,5 @@ endforeach()
 target_link_system_libraries(my_header_lib INTERFACE fmt::fmt-header-only)
 
 if(FEATURE_TESTS)
-  #XXX add_subdirectory("test")
+  add_subdirectory("test")
 endif()
