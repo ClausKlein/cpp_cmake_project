@@ -8,7 +8,7 @@ endforeach()
 include(Catch)
 
 # test executable
-_add_executable(my_header_lib_tests "tests.cpp")
+add_executable(my_header_lib_tests "tests.cpp")
 
 target_link_libraries(
   my_header_lib_tests
