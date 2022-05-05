@@ -16,7 +16,7 @@ foreach(DEPENDENCY ${my_header_lib_DEPENDENCIES_CONFIGURED})
 endforeach()
 
 # Link dependencies:
-target_link_system_libraries(my_header_lib INTERFACE fmt::fmt-header-only)
+target_link_libraries(my_header_lib INTERFACE fmt::fmt-header-only)
 
 if(FEATURE_TESTS)
   add_subdirectory("test")
