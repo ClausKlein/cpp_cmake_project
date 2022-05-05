@@ -2,31 +2,34 @@
 # - list all the task under PHONY
 .PHONY: build test install test_release docs format clean
 
+# see https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
+CMAKE_GENERATOR?="Ninja Multi-Config"
+export CMAKE_GENERATOR
+export CMAKE_EXPORT_COMPILE_COMMANDS=YES
+export CTEST_OUTPUT_ON_FAILURE=YES
+
 build:
-	cmake ./ -B ./build -G "Ninja Multi-Config" -D CMAKE_BUILD_TYPE:STRING=Release -D FEATURE_TESTS:BOOL=OFF -D FEATURE_DOCS:BOOL=OFF
+	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=Release -D FEATURE_TESTS:BOOL=OFF
 	cmake --build ./build --config Release
 
-install: test build
+# NOTE: it is important to not export a build with enabled FEATURE_TESTS! CK
+install: test_release build
 	DESTDIR=${HOME}/.local cmake --build ./build --config Release --target install
 
 test:
-	cmake ./ -B ./build -G "Ninja Multi-Config" -D CMAKE_BUILD_TYPE:STRING=Debug -D FEATURE_TESTS:BOOL=ON
+	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=Debug -D FEATURE_TESTS:BOOL=ON
 	cmake --build ./build --config Debug
-
-	(cd build/my_exe/test && ctest -C Debug --output-on-failure)
-	(cd build/my_header_lib/test && ctest -C Debug --output-on-failure)
-	(cd build/my_lib/test && ctest -C Debug --output-on-failure)
+	cmake --build ./build --config Debug --target test
+	gcovr -r .
 
 test_release:
-	cmake ./ -B ./build -G "Ninja Multi-Config" -D CMAKE_BUILD_TYPE:STRING=RelWithDebInfo -D FEATURE_TESTS:BOOL=ON
+	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=RelWithDebInfo -D FEATURE_TESTS:BOOL=ON
 	cmake --build ./build --config RelWithDebInfo
-
-	(cd build/my_exe/test && ctest -C RelWithDebInfo --output-on-failure)
-	(cd build/my_header_lib/test && ctest -C RelWithDebInfo --output-on-failure)
-	(cd build/my_lib/test && ctest -C RelWithDebInfo --output-on-failure)
+	cmake --build ./build --config RelWithDebInfo --target test
+	gcovr -r .
 
 docs:
-	cmake ./ -B ./build -G "Ninja Multi-Config" -D CMAKE_BUILD_TYPE:STRING=Debug -D FEATURE_DOCS:BOOL=ON -D FEATURE_TESTS:BOOL=OFF
+	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=Debug -D FEATURE_DOCS:BOOL=ON -D FEATURE_TESTS:BOOL=OFF
 	cmake --build ./build --target doxygen-docs --config Debug
 
 format:

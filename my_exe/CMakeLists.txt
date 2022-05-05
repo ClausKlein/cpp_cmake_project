@@ -1,4 +1,4 @@
-add_executable(my_exe "./src/main.cpp")
+add_executable(my_exe "src/main.cpp")
 target_link_libraries(my_exe PRIVATE project_options project_warnings) # link project_options/warnings
 
 # Includes
@@ -18,5 +18,5 @@ set(my_exe_LINKED_LIBRARIES fmt::fmt)
 target_link_system_libraries(my_exe PRIVATE ${my_exe_LINKED_LIBRARIES})
 
 if(FEATURE_TESTS)
-  add_subdirectory("./test")
+  add_subdirectory("test")
 endif()

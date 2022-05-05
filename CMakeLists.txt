@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16...3.23)
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 17)
 
 # Add project_options v0.21.0
 # https://github.com/aminya/project_options
@@ -13,7 +14,7 @@ FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
 # Define the features of the project
-include("./Features.cmake")
+include("Features.cmake")
 
 # install vcpkg dependencies: - should be called before defining project()
 run_vcpkg()
@@ -29,10 +30,12 @@ project(
 # enable sanitizers and clang-tidy if running the tests
 set(ENABLE_CLANG_TIDY OFF)
 set(ENABLE_CPPCHECK OFF)
+set(ENABLE_COVERAGE OFF)
 set(ENABLE_SANITIZER_ADDRESS OFF)
 if(FEATURE_TESTS)
   set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
-  set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  #XXX set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  set(ENABLE_COVERAGE "ENABLE_COVERAGE")
 
   string(FIND "$ENV{PATH}" "$ENV{VSINSTALLDIR}" index_of_vs_install_dir)
   if(# not windows
@@ -52,6 +55,9 @@ else()
   set(ENABLE_DOXYGEN OFF)
 endif()
 
+# to get CMAKE_INSTALL_INCLUDEDIR
+include(GNUInstallDirs)
+
 # Initialize project_options variable related to this project
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
@@ -62,7 +68,7 @@ project_options(
   # ENABLE_INTERPROCEDURAL_OPTIMIZATION
   # ENABLE_NATIVE_OPTIMIZATION
   ${ENABLE_DOXYGEN}
-  # ENABLE_COVERAGE
+  ${ENABLE_COVERAGE}
   ${ENABLE_SANITIZER_ADDRESS}
   # ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
   # ENABLE_SANITIZER_LEAK
@@ -77,9 +83,24 @@ project_options(
   # ENABLE_UNITY
 )
 
-add_subdirectory(./my_exe)
-add_subdirectory(./my_lib)
-add_subdirectory(./my_header_lib)
+# use xml reporter if coverage is enabled
+if(${ENABLE_COVERAGE})
+  set(COVERAGE_ARGS REPORTER xml)
+endif()
+
+enable_testing()
+
+add_subdirectory(my_exe)
+add_subdirectory(my_lib)
+add_subdirectory(my_header_lib)
+
+if(NOT DEFINED my_header_lib_DEPENDENCIES_CONFIGURED)
+  message(WARNING "missing my_header_lib_DEPENDENCIES_CONFIGURED!")
+endif()
+
+if(NOT DEFINED my_header_lib_INCLUDE_DIR)
+  message(WARNING "missing my_header_lib_INCLUDE_DIR!")
+endif()
 
 # Package the project
 package_project(
@@ -90,7 +111,7 @@ package_project(
   project_options
   project_warnings
   INTERFACE_DEPENDENCIES_CONFIGURED
-  ${my_header_lib_DEPENDENCIES_CONFIGURED}
+  fmt # FIXME ${my_header_lib_DEPENDENCIES_CONFIGURED}
   INTERFACE_INCLUDES
   ${my_header_lib_INCLUDE_DIR}
   PUBLIC_INCLUDES
