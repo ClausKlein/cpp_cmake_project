@@ -34,8 +34,7 @@ See [cppreference.com](https://en.cppreference.com/w/cpp/compiler_support)
 to see which features are supported by each compiler.
 The following compilers should work:
 
-  * [gcc 7+](https://gcc.gnu.org/)
-	<details>
+  * [gcc 11+](https://gcc.gnu.org/)
 	<summary>Install command</summary>
 
 	- Debian/Ubuntu:
@@ -49,10 +48,9 @@ The following compilers should work:
 	- MacOS:
 
 			brew install gcc
-	</details>
 
-  * [clang 6+](https://clang.llvm.org/)
-	<details>
+
+  * [clang 13+](https://clang.llvm.org/)
 	<summary>Install command</summary>
 
 	- Debian/Ubuntu:
@@ -74,17 +72,16 @@ The following compilers should work:
 	- MacOS:
 
 			brew install llvm
-	</details>
+
 
   * [Visual Studio 2019 or higher](https://visualstudio.microsoft.com/)
-	<details>
 	<summary>Install command + Environment setup</summary>
 
-	On Windows, you need to install Visual Studio 2019 because of the SDK and libraries that ship with it.
+	- On Windows, you need to install Visual Studio 2019 because of the SDK and libraries that ship with it.
 
-  	Visual Studio IDE - 2019 Community (installs Clang too):
+	Visual Studio IDE - 2019 Community (installs Clang too):
 
-  	  	choco install -y visualstudio2019community --package-parameters "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --includeOptional --passive --locale en-US"
+		choco install -y visualstudio2019community --package-parameters "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --includeOptional --passive --locale en-US"
 
 	Put MSVC compiler, Clang compiler, and vcvarsall.bat on the path:
 
@@ -100,10 +97,8 @@ The following compilers should work:
 			[Environment]::SetEnvironmentVariable("Path", $path + ";$clpath" + ";$clangpath" + ";$vcvarsallpath", "User")
 			refreshenv
 
-	</details>
 
-2. [CMake 3.15+](https://cmake.org/)
-	<details>
+2. [CMake 3.16+](https://cmake.org/)
 	<summary>Install Command</summary>
 
 	- Debian/Ubuntu:
@@ -118,12 +113,10 @@ The following compilers should work:
 
 			brew install cmake
 
-	</details>
 
 ### Optional Dependencies
 #### C++ Tools
   * [Doxygen](http://doxygen.nl/)
-	<details>
 	<summary>Install Command</summary>
 
 	- Debian/Ubuntu:
@@ -139,13 +132,11 @@ The following compilers should work:
 	- MacOS:
 
 			brew install doxygen
-	 		brew install graphviz
+			brew install graphviz
 
-	</details>
 
 
   * [ccache](https://ccache.dev/)
-	<details>
 	<summary>Install Command</summary>
 
 	- Debian/Ubuntu:
@@ -160,11 +151,9 @@ The following compilers should work:
 
 			brew install ccache
 
-	</details>
 
 
   * [Cppcheck](http://cppcheck.sourceforge.net/)
-	<details>
 	<summary>Install Command</summary>
 
 	- Debian/Ubuntu:
@@ -179,16 +168,13 @@ The following compilers should work:
 
 			brew install cppcheck
 
-	</details>
 
 
   * [include-what-you-use](https://include-what-you-use.org/)
-	<details>
 	<summary>Install Command</summary>
 
 	Follow instructions here:
 	https://github.com/include-what-you-use/include-what-you-use#how-to-install
-	</details>
 
 #### GUI libraries
 This project can be made to work with several optional GUI frameworks.

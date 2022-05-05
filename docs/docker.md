@@ -45,7 +45,6 @@ docker run -it \
 You can configure and build [as directed above](#build) using these commands:
 
 ```bash
-/starter_project# mkdir build
 /starter_project# cmake -S . -B ./build
 /starter_project# cmake --build ./build
 ```
@@ -54,7 +53,6 @@ You can configure and build using `clang-13`, without rebuilding the container,
 with these commands:
 
 ```bash
-/starter_project# mkdir build
 /starter_project# CC=clang CXX=clang++ cmake -S . -B ./build
 /starter_project# cmake --build ./build
 ```
@@ -65,7 +63,4 @@ All of the tools this project supports are installed in the Docker image;
 enabling them is as simple as flipping a switch using the `ccmake` interface.
 Be aware that some of the sanitizers conflict with each other, so be sure to
 run them separately.
-
-A script called `build_examples.sh` is provided to help you to build the example
-GUI projects in this container.
 
