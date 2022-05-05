@@ -5,11 +5,11 @@ cmake_minimum_required(VERSION 3.16...3.23)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 17)
 
-# Add project_options v0.21.0
+# Add project_options v0.21.1
 # https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
 include(FetchContent)
-FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.21.0.zip)
+FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.21.1.zip)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
@@ -102,6 +102,10 @@ if(NOT DEFINED my_header_lib_INCLUDE_DIR)
   message(WARNING "missing my_header_lib_INCLUDE_DIR!")
 endif()
 
+if(NOT DEFINED my_lib_INCLUDE_DIR)
+  message(WARNING "my_lib_INCLUDE_DIR!")
+endif()
+
 # Package the project
 package_project(
   TARGETS
@@ -111,7 +115,7 @@ package_project(
   project_options
   project_warnings
   INTERFACE_DEPENDENCIES_CONFIGURED
-  fmt # FIXME ${my_header_lib_DEPENDENCIES_CONFIGURED}
+  ${my_header_lib_DEPENDENCIES_CONFIGURED}
   INTERFACE_INCLUDES
   ${my_header_lib_INCLUDE_DIR}
   PUBLIC_INCLUDES

@@ -9,7 +9,7 @@ export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 export CTEST_OUTPUT_ON_FAILURE=YES
 
 build:
-	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=Release -D FEATURE_TESTS:BOOL=OFF
+	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=Release -D FEATURE_TESTS:BOOL=OFF -D FEATURE_DOCS:BOOL=OFF
 	cmake --build ./build --config Release
 
 # NOTE: it is important to not export a build with enabled FEATURE_TESTS! CK
@@ -23,7 +23,7 @@ test:
 	gcovr -r .
 
 test_release:
-	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=RelWithDebInfo -D FEATURE_TESTS:BOOL=ON
+	cmake -B ./build -G $(CMAKE_GENERATOR) -D CMAKE_BUILD_TYPE:STRING=RelWithDebInfo -D FEATURE_TESTS:BOOL=ON -D FEATURE_DOCS:BOOL=OFF
 	cmake --build ./build --config RelWithDebInfo
 	cmake --build ./build --config RelWithDebInfo --target test
 	gcovr -r .

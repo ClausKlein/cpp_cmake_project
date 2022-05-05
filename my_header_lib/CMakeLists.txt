@@ -9,7 +9,7 @@ target_include_directories(my_header_lib INTERFACE "$<BUILD_INTERFACE:${CMAKE_CU
                                                    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 # Find dependencies:
-set(my_header_lib_DEPENDENCIES_CONFIGURED fmt) # FIXME: PARENT_SCOPE)
+set(my_header_lib_DEPENDENCIES_CONFIGURED fmt PARENT_SCOPE)
 
 foreach(DEPENDENCY ${my_header_lib_DEPENDENCIES_CONFIGURED})
   find_package(${DEPENDENCY} CONFIG REQUIRED)
@@ -19,5 +19,5 @@ endforeach()
 target_link_system_libraries(my_header_lib INTERFACE fmt::fmt-header-only)
 
 if(FEATURE_TESTS)
-  add_subdirectory("test")
+  #XXX add_subdirectory("test")
 endif()
