@@ -103,7 +103,7 @@ if(NOT DEFINED my_header_lib_INCLUDE_DIR)
 endif()
 
 if(NOT DEFINED my_lib_INCLUDE_DIR)
-  message(WARNING "my_lib_INCLUDE_DIR!")
+  message(WARNING "missing my_lib_INCLUDE_DIR!")
 endif()
 
 # Package the project

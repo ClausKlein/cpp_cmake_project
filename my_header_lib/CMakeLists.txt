@@ -1,11 +1,13 @@
 add_library(my_header_lib INTERFACE)
 target_link_libraries(my_header_lib INTERFACE project_options project_warnings) # link project_options/warnings
 
+if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
+  message(FATAL_ERROR "missing CMAKE_INSTALL_INCLUDEDIR!")
+endif()
+
 # Includes
-set(my_header_lib_INCLUDE_DIR
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    PARENT_SCOPE)
-target_include_directories(my_header_lib INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+set(my_header_lib_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(my_header_lib INTERFACE "$<BUILD_INTERFACE:${my_header_lib_INCLUDE_DIR}>"
                                                    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 # Find dependencies:
@@ -16,7 +18,7 @@ foreach(DEPENDENCY ${my_header_lib_DEPENDENCIES_CONFIGURED})
 endforeach()
 
 # Link dependencies:
-target_link_libraries(my_header_lib INTERFACE fmt::fmt-header-only)
+target_link_libraries(my_header_lib INTERFACE fmt::fmt)
 
 if(FEATURE_TESTS)
   add_subdirectory("test")

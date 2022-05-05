@@ -6,10 +6,8 @@ if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
 endif()
 
 # Includes
-set(my_lib_INCLUDE_DIR
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    PARENT_SCOPE)
-target_include_directories(my_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+set(my_lib_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(my_lib PUBLIC "$<BUILD_INTERFACE:${my_lib_INCLUDE_DIR}>"
                                          "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 # Find dependencies:
