@@ -22,7 +22,7 @@ run_vcpkg()
 # Set the project name and language
 project(
   cpp_cmake_project
-  VERSION 0.0.1
+  VERSION 0.1.0
   DESCRIPTION "example only"
   HOMEPAGE_URL "https://github.com/ClausKlein/cpp_cmake_project"
   LANGUAGES CXX C)
@@ -93,18 +93,6 @@ enable_testing()
 add_subdirectory(my_exe)
 add_subdirectory(my_lib)
 add_subdirectory(my_header_lib)
-
-if(NOT DEFINED my_header_lib_DEPENDENCIES_CONFIGURED)
-  message(WARNING "missing my_header_lib_DEPENDENCIES_CONFIGURED!")
-endif()
-
-if(NOT DEFINED my_header_lib_INCLUDE_DIR)
-  message(WARNING "missing my_header_lib_INCLUDE_DIR!")
-endif()
-
-if(NOT DEFINED my_lib_INCLUDE_DIR)
-  message(WARNING "missing my_lib_INCLUDE_DIR!")
-endif()
 
 # Package the project
 package_project(
