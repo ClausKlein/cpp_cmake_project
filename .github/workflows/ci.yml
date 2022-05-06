@@ -157,7 +157,8 @@ jobs:
         if: matrix.build_type == 'Release'
         run: |
           cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=OFF
-          DESTDIR=stage cmake --build ./build --config ${{matrix.build_type}} --target install
+          cmake --build ./build --config ${{matrix.build_type}} --target all
+          (cd build && cmake . --config ${{matrix.build_type}} --install --prefix ../stage)
 
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
