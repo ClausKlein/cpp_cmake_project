@@ -158,7 +158,7 @@ jobs:
         run: |
           cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=OFF
           cmake --build ./build --config ${{matrix.build_type}} --target all
-          (cd build && cmake . --config ${{matrix.build_type}} --install --prefix ../stage)
+          cmake --install ./build --config ${{matrix.build_type}} --prefix ./stage
 
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
