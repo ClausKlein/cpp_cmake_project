@@ -1,3 +1,4 @@
+---
 name: ci
 on:
   pull_request:
@@ -111,11 +112,11 @@ jobs:
         with:
           languages: "cpp"
 
-        # make sure coverage is only enabled for Debug builds, since it sets -O0 to make sure coverage
-        # has meaningful results
+      # make sure coverage is only enabled for Debug builds, since it sets -O0 to make sure coverage
+      # has meaningful results
       - name: Configure CMake
         run: |
-          cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=true
+          cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=ON
 
       - name: Build
         # Execute the build.  You can specify a specific target with "--target <NAME>"
@@ -152,9 +153,17 @@ jobs:
         run: |
           cpack -C ${{matrix.build_type}} -G ${{matrix.package_generator}}
 
+      - name: install
+        if: matrix.build_type == 'Release'
+        run: |
+          cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=OFF
+          cmake --build ./build --config ${{matrix.build_type}} --target all
+          cmake --install ./build --config ${{matrix.build_type}} --prefix ./stage
+
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.package_generator != '' }}
+        # TODO: i.e.: build/cpp_vcpkg_project-0.0.1--Linux-Release-Clang-13.0.0.tar.bz2
         with:
           files: |
             build/*-*${{ matrix.build_type }}*-*.*
