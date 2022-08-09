@@ -1,4 +1,7 @@
 add_library(my_header_lib INTERFACE)
+target_sources(my_header_lib INTERFACE FILE_SET HEADERS
+                             BASE_DIRS include
+                             FILES include/my_header_lib/lib.hpp)
 target_link_libraries(my_header_lib INTERFACE project_options project_warnings) # link project_options/warnings
 
 if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)

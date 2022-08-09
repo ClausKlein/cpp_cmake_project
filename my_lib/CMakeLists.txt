@@ -1,4 +1,7 @@
 add_library(my_lib "src/my_lib/lib.cpp")
+target_sources(my_lib PUBLIC FILE_SET HEADERS
+                      BASE_DIRS include
+                      FILES include/my_lib/lib.hpp)
 target_link_libraries(my_lib PRIVATE project_options project_warnings) # link project_options/warnings
 
 if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
