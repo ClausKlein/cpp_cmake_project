@@ -4,7 +4,6 @@ cmake_minimum_required(VERSION 3.21...3.24)
 # If commented, the latest supported standard for your compiler is automatically set.
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 17)
-#XXX cmake_policy(SET CMP0135 NEW)
 
 # ---- Add dependencies via CPM ----
 # see https://github.com/TheLartians/CPM.cmake for more info
@@ -125,8 +124,8 @@ package_project(
   my_exe
   my_lib
   my_header_lib
-  # project_options
-  # project_warnings
+  #XXX project_options
+  #XXX project_warnings
   INTERFACE_DEPENDENCIES_CONFIGURED
   ${my_header_lib_DEPENDENCIES_CONFIGURED}
   INTERFACE_INCLUDES
