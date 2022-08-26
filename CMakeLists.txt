@@ -11,7 +11,7 @@ set(CMAKE_C_STANDARD 17)
 include(CPM.cmake)
 
 # see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.24.0")
+cpmaddpackage("gh:aminya/project_options@0.24.1")
 list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
 
 # Define the features of the project
@@ -23,7 +23,7 @@ run_vcpkg()
 # Set the project name and language
 project(
   cpp_cmake_project
-  VERSION 0.1.0
+  VERSION 0.2.0
   DESCRIPTION "example only"
   HOMEPAGE_URL "https://github.com/ClausKlein/cpp_cmake_project"
   LANGUAGES CXX C)
@@ -59,7 +59,10 @@ endif()
 
 if(PROJECT_IS_TOP_LEVEL)
   include(GNUInstallDirs) # for CMAKE_INSTALL_INCLUDEDIR
-  set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
+  set(CMAKE_VERIFY_INTERFACE_HEADER_SETS YES)
+  set(CMAKE_SKIP_INSTALL_RULES ${FEATURE_TESTS})
+else()
+  option(CMAKE_SKIP_INSTALL_RULES "Disable install rules" YES)
 endif()
 
 # Initialize project_options variable related to this project
@@ -98,21 +101,6 @@ add_subdirectory(my_exe)
 add_subdirectory(my_lib)
 add_subdirectory(my_header_lib)
 
-# Package the project
-package_project(
-  TARGETS
-  my_exe
-  my_lib
-  my_header_lib
-  project_options
-  project_warnings
-  INTERFACE_DEPENDENCIES_CONFIGURED
-  ${my_header_lib_DEPENDENCIES_CONFIGURED}
-  INTERFACE_INCLUDES
-  ${my_header_lib_INCLUDE_DIR}
-  PUBLIC_INCLUDES
-  ${my_lib_INCLUDE_DIR})
-
 if(FEATURE_FUZZ_TESTS)
   add_subdirectory(fuzz_test)
 endif()
@@ -126,6 +114,25 @@ endif()
 
 # set the startup project for the "play" button in MSVC
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT my_exe)
+
+if(CMAKE_SKIP_INSTALL_RULES)
+  return()
+endif()
+
+# Package the project
+package_project(
+  TARGETS
+  my_exe
+  my_lib
+  my_header_lib
+  # project_options
+  # project_warnings
+  INTERFACE_DEPENDENCIES_CONFIGURED
+  ${my_header_lib_DEPENDENCIES_CONFIGURED}
+  INTERFACE_INCLUDES
+  ${my_header_lib_INCLUDE_DIR}
+  PUBLIC_INCLUDES
+  ${my_lib_INCLUDE_DIR})
 
 # Experience shows that explicit package naming can help make it easier to sort
 # out potential ABI related issues before they start, while helping you

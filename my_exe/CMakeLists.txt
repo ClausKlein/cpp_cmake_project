@@ -1,5 +1,8 @@
 add_executable(my_exe "src/main.cpp")
-target_link_libraries(my_exe PRIVATE project_options project_warnings) # link project_options/warnings
+
+if(CMAKE_SKIP_INSTALL_RULES)
+  target_link_libraries(my_exe PRIVATE project_options project_warnings) # link project_options/warnings
+endif()
 
 # Includes
 # because my_exe includes are private, it uses absolute paths.

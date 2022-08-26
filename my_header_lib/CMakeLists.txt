@@ -1,8 +1,16 @@
 add_library(my_header_lib INTERFACE)
-target_sources(my_header_lib INTERFACE FILE_SET HEADERS
-                             BASE_DIRS include
-                             FILES include/my_header_lib/lib.hpp)
-target_link_libraries(my_header_lib INTERFACE project_options project_warnings) # link project_options/warnings
+target_sources(
+  my_header_lib
+  INTERFACE FILE_SET
+            HEADERS
+            BASE_DIRS
+            include
+            FILES
+            include/my_header_lib/lib.hpp)
+
+if(CMAKE_SKIP_INSTALL_RULES)
+  target_link_libraries(my_header_lib INTERFACE project_options project_warnings) # link project_options/warnings
+endif()
 
 if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
   include(GNUInstallDirs)
