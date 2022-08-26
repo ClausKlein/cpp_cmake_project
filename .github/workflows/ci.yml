@@ -147,18 +147,18 @@ jobs:
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
         uses: github/codeql-action/analyze@v2
 
-      - name: CPack
-        if: ${{ matrix.build_type == 'Release' && matrix.package_generator != '' }}
-        working-directory: ./build
-        run: |
-          cpack -C ${{matrix.build_type}} -G ${{matrix.package_generator}}
-
       - name: install
         if: matrix.build_type == 'Release'
         run: |
           cmake -S ./ -B ./build -G "${{matrix.generator}}" -D CMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -D FEATURE_TESTS=OFF
           cmake --build ./build --config ${{matrix.build_type}} --target all
           cmake --install ./build --config ${{matrix.build_type}} --prefix ./stage
+
+      - name: CPack
+        if: ${{ matrix.build_type == 'Release' && matrix.package_generator != '' }}
+        working-directory: ./build
+        run: |
+          cpack -C ${{matrix.build_type}} -G ${{matrix.package_generator}}
 
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
