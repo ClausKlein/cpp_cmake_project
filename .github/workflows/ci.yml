@@ -36,7 +36,6 @@ jobs:
           - macos-latest
           - windows-latest
         compiler:
-          # you can specify the version after `-` like "llvm-13.0.0".
           - llvm-13.0.0
           - gcc-11
         generator:
@@ -102,21 +101,21 @@ jobs:
           vcpkg: true
           ccache: true
           clangtidy: true
-          cppcheck: true
+          cppcheck: false
           gcovr: true
           opencppcoverage: true
 
       - name: Initialize CodeQL
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
         with:
           languages: "cpp"
 
       # make sure coverage is only enabled for Debug builds, since it sets -O0 to make sure coverage
       # has meaningful results
-      - name: Configure CMake
+      - name: Configure CMake for FEATURE_TESTS
         run: |
-          cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=ON
+          cmake -S ./ -B ./build -G "${{matrix.generator}}" -D CMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -D FEATURE_TESTS=ON
 
       - name: Build
         # Execute the build.  You can specify a specific target with "--target <NAME>"
@@ -145,20 +144,20 @@ jobs:
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
 
-      - name: CPack
-        if: matrix.package_generator != ''
+      - name: Install Release
+        if: matrix.build_type == 'Release'
+        run: |
+          cmake -S ./ -B ./build -G "${{matrix.generator}}" -D CMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -D FEATURE_TESTS=OFF
+          cmake --build ./build --config ${{matrix.build_type}} --target all
+          cmake --install ./build --config ${{matrix.build_type}} --prefix ./stage
+
+      - name: CPack Release
+        if: ${{ matrix.build_type == 'Release' && matrix.package_generator != '' }}
         working-directory: ./build
         run: |
           cpack -C ${{matrix.build_type}} -G ${{matrix.package_generator}}
-
-      - name: install
-        if: matrix.build_type == 'Release'
-        run: |
-          cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=OFF
-          cmake --build ./build --config ${{matrix.build_type}} --target all
-          cmake --install ./build --config ${{matrix.build_type}} --prefix ./stage
 
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
@@ -169,7 +168,7 @@ jobs:
             build/*-*${{ matrix.build_type }}*-*.*
 
       - name: Publish to codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v1
         with:
           flags: ${{ runner.os }}
           name: ${{ runner.os }}-coverage
