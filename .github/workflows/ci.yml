@@ -148,7 +148,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
 
       - name: CPack
-        if: ${{ matrix.build_type == 'Release' && if: matrix.package_generator != '' }}
+        if: ${{ matrix.build_type == 'Release' && matrix.package_generator != '' }}
         working-directory: ./build
         run: |
           cpack -C ${{matrix.build_type}} -G ${{matrix.package_generator}}
